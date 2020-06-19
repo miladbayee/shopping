@@ -32,6 +32,11 @@ class ElementBuilder {
     return this;
   }
 
+  src(link){
+    this.element.src=link;
+    return this;
+  }
+
   get() {
     return this;
   }
