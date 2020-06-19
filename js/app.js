@@ -33,3 +33,16 @@ Products.items.forEach((product) => {
 
   builder("h3").textContent(`${product.fields.title}`).appendTo(article);
 });
+
+const buyBascketBtn = document.querySelector("#buy-bascket-btn");
+const closeCart = document.querySelector(".close-cart");
+
+buyBascketBtn.addEventListener("click", () => {
+  document.querySelector(".cart-overlay").classList.add("transparentBcg");
+  document.querySelector(".cart").classList.add("showCart");
+});
+
+closeCart.addEventListener("click", () => {
+  document.querySelector(".cart-overlay").classList.remove("transparentBcg");
+  document.querySelector(".cart").classList.remove("showCart");
+});
