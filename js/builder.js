@@ -22,6 +22,11 @@ class ElementBuilder {
     return this;
   }
 
+  id(id){
+    this.element.id=id;
+    return this
+  }
+
   innerHTML(htmlvalue) {
     this.element.innerHTML = htmlvalue;
     return this;
@@ -35,6 +40,11 @@ class ElementBuilder {
   src(link){
     this.element.src=link;
     return this;
+  }
+
+  onclick(fun){
+    this.element.onclick=fun;
+    return this
   }
 
   get() {
