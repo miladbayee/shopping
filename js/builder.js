@@ -12,7 +12,7 @@ class ElementBuilder {
     return this;
   }
 
-  textContent(text) {
+  text(text) {
     this.element.textContent = text;
     return this;
   }
@@ -27,7 +27,7 @@ class ElementBuilder {
     return this
   }
 
-  innerHTML(htmlvalue) {
+  innerHtml(htmlvalue) {
     this.element.innerHTML = htmlvalue;
     return this;
   }
