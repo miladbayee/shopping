@@ -1,9 +1,11 @@
 /* Variabeles */
-let itemsCounter=null;
+let itemsCounter = null;
 const buyBascketBtn = document.querySelector("#buy-bascket-btn");
 const closeCart = document.querySelector(".close-cart");
-const cartItems=document.querySelector('.cart-items');
-const clearCart=document.querySelector('#clear-cart')
+const cartItems = document.querySelector(".cart-items");
+const clearCart = document.querySelector("#clear-cart");
+const cartCcontent = document.querySelector("#cart-content");
+let productItem = [];
 
 Products.items.forEach((product) => {
   const productsList = document.querySelector("#products-center");
@@ -25,12 +27,66 @@ Products.items.forEach((product) => {
     .className("bag-btn")
     .onclick((e) => {
       if (e.target.className === "fas fa-shopping-cart") {
-        // ToDo(e.target.parentElement.parentElement.id);
+        const itemId = e.target.parentElement.parentElement.id;
+        Products.items.forEach((product, index) => {
+          if (itemId - 1 === index) {
+            const id = findId(productItem, itemId);
+            if (id === -1) {
+              const productId = new ProductsId(itemId);
+              productId.counterUp();
+              productItem.push(productId);
+            } else {
+              productItem[itemId - 1].counterUp();
+            }
+            cartCcontent.innerHTML = `
+              <div class="cart-item">
+                  <img src="${product.fields.image.fields.file.url}">
+                  <div>
+                      <h4>${product.fields.title}</h4>
+                      <h5>${product.fields.price}</h5><span class="remove-item">remove</span>
+                  </div>
+                  <div>
+                      <i class="fas fa-chevron-up"></i>
+                      <p class="item-amount">0</p>
+                      <i class="fas fa-chevron-down"></i>
+                  </div>
+              </div>
+            `;
+          }
+        });
       } else {
-        // ToDo(e.target.parentElement.id);
+        const itemId = e.target.parentElement.id;
+        Products.items.forEach((product, index) => {
+          if (itemId - 1 === index) {
+            const id = findId(productItem, itemId);
+            if (id === -1) {
+              const productId = new ProductsId(itemId);
+              productId.counterUp();
+              productItem.push(productId);
+            } else {
+              productItem[itemId - 1].counterUp();
+            }
+            // const cartBuilder=cartItemBuilder(product.fields.image.fields.file.url,product.fields.title,product.fields.price,'0')
+            cartCcontent.innerHTML = `
+              <div class="cart-item">
+                  <img src="${product.fields.image.fields.file.url}">
+                  <div>
+                      <h4>${product.fields.title}</h4>
+                      <h5>${product.fields.price}</h5><span class="remove-item">remove</span>
+                  </div>
+                  <div>
+                      <i class="fas fa-chevron-up"></i>
+                      <p class="item-amount">0</p>
+                      <i class="fas fa-chevron-down"></i>
+                  </div>
+              </div>
+            `;
+          }
+        });
       }
-      itemsCounter++
-      cartItems.textContent=itemsCounter
+      itemsCounter++;
+      cartItems.textContent = itemsCounter;
+      console.log(productItem);
     })
     .appendTo(divProductList);
 
@@ -54,9 +110,30 @@ closeCart.addEventListener("click", () => {
   document.querySelector(".cart").classList.remove("showCart");
 });
 
-clearCart.addEventListener('click',()=>{
-  cartItems.textContent='';
-  itemsCounter=null;
-})
+clearCart.addEventListener("click", () => {
+  cartItems.textContent = "";
+  itemsCounter = null;
+  cartCcontent.innerHTML = "";
+});
 
+/* Functions */
+function cartItemBuilder(imgSrc, title, price, count) {
+  `
+    <div class="cart-item">
+        <img src="${imgSrc}">
+        <div>
+            <h4>${title}</h4>
+            <h5>${price}</h5><span class="remove-item">remove</span>
+        </div>
+        <div>
+            <i class="fas fa-chevron-up"></i>
+            <p class="item-amount">${count}</p>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+  `;
+}
 
+const findId = (array, id) => {
+  return array.findIndex((item) => item.id === id);
+};
