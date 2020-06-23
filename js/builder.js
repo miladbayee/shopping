@@ -47,9 +47,6 @@ class ElementBuilder {
     return this
   }
 
-  get() {
-    return this;
-  }
 }
 
 // const builder = {
