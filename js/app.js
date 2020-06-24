@@ -5,9 +5,9 @@ const closeCart = document.querySelector(".close-cart");
 const cartItems = document.querySelector(".cart-items");
 const clearCart = document.querySelector("#clear-cart");
 const cartContent = document.querySelector("#cart-content");
-let productBasket;
 let productItem = [];
 
+//add products data from json file to DOM
 Products.items.forEach((product) => {
   const productsList = document.querySelector("#products-center");
   const article = builder("article")
@@ -39,7 +39,12 @@ Products.items.forEach((product) => {
           if (itemId - 1 === index) {
             const id = findId(productItem, itemId);
             if (id === -1) {
-              productBasket = new ProductsBasket(itemId, title, price, imgSrc);
+              const productBasket = new ProductsBasket(
+                itemId,
+                title,
+                price,
+                imgSrc
+              );
               productBasket.counterUp();
               productItem.push(productBasket);
             } else {
@@ -60,13 +65,17 @@ Products.items.forEach((product) => {
           if (itemId - 1 === index) {
             const id = findId(productItem, itemId);
             if (id === -1) {
-              productBasket = new ProductsBasket(itemId, title, price, imgSrc);
+              const productBasket = new ProductsBasket(
+                itemId,
+                title,
+                price,
+                imgSrc
+              );
               productBasket.counterUp();
               productItem.push(productBasket);
-            } else if (id !== -1) {
+            } else {
               productItem[id].counterUp();
             }
-            // const cartBuilder=cartItemBuilder(product.fields.image.fields.file.url,product.fields.title,product.fields.price,'0')
           }
         });
         productItem.forEach((product) => {
@@ -89,6 +98,8 @@ Products.items.forEach((product) => {
 });
 
 /* Functions */
+
+//build cart item document selected from products list
 function cartItemBuilder(imgSrc, title, price, count) {
   `
     <div class="cart-item">
@@ -106,11 +117,12 @@ function cartItemBuilder(imgSrc, title, price, count) {
   `;
 }
 
+//finde products index
 const findId = (array, id) => {
   return array.findIndex((item) => item.id === id);
 };
 
-//Add product to cart item
+//function add product from list to cart items
 function creatCartItem(product) {
   const cartItemElement = document.createElement("div");
   cartItemElement.className = "cart-item";
@@ -190,34 +202,39 @@ function creatCartItem(product) {
   cartContent.appendChild(cartItemElement);
 }
 
+//calculator select products price in cart items
 function totalPrice(products) {
   const totalPrice = document.querySelector("#total-price");
   let calcPrice = null;
   products.forEach((item) => {
-   return calcPrice += item.price * item.counter;
+    return (calcPrice += item.price * item.counter);
   });
-  if(calcPrice>0){
+  if (calcPrice > 0) {
     totalPrice.textContent = calcPrice;
+  } else {
+    totalPrice.textContent = "";
   }
-  else{
-    totalPrice.textContent = '';
-  }
-  
 }
 
 /*Events Listener */
+
+//add event to backet button
 buyBascketBtn.addEventListener("click", () => {
   document.querySelector(".cart-overlay").classList.add("transparentBcg");
   document.querySelector(".cart").classList.add("showCart");
 });
 
+//add event to close button in cart overlay
 closeCart.addEventListener("click", () => {
   document.querySelector(".cart-overlay").classList.remove("transparentBcg");
   document.querySelector(".cart").classList.remove("showCart");
 });
 
+// clear all items for cart overlay
 clearCart.addEventListener("click", () => {
+  const totalPrice = document.querySelector("#total-price");
   cartItems.textContent = "";
   itemsCounter = null;
   cartContent.innerHTML = "";
+  totalPrice.textContent = "";
 });
