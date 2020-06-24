@@ -37,6 +37,11 @@ class ElementBuilder {
     return this;
   }
 
+  dataId(value){
+    this.element.dataset.id=value;
+    return this;
+  }
+
   src(link){
     this.element.src=link;
     return this;

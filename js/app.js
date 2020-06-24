@@ -10,6 +10,11 @@ let productItem = [];
 //add products data from json file to DOM
 Products.items.forEach((product) => {
   const productsList = document.querySelector("#products-center");
+  const btnInnerHTML = `
+            <i class='fas fa-shopping-cart' data-id=${product.sys.id}></i>
+            Add To Card
+            <i class='fas fa-shopping-cart' data-id=${product.sys.id}></i>
+          `;
   const article = builder("article")
     .className("product")
     .appendTo(productsList);
@@ -26,76 +31,44 @@ Products.items.forEach((product) => {
 
   const addButton = builder("button")
     .className("bag-btn")
+    .dataId(`${product.sys.id}`)
+    .innerHtml(btnInnerHTML)
     .onclick((e) => {
-      if (e.target.className === "fas fa-shopping-cart") {
-        cartContent.innerHTML = "";
-        const cartItemElement = document.createElement("div");
-        cartItemElement.className = "cart-item";
-        const itemId = e.target.parentElement.parentElement.id;
-        Products.items.forEach((product, index) => {
-          const title = product.fields.title;
-          const price = product.fields.price;
-          const imgSrc = product.fields.image.fields.file.url;
-          if (itemId - 1 === index) {
-            const id = findId(productItem, itemId);
-            if (id === -1) {
-              const productBasket = new ProductsBasket(
-                itemId,
-                title,
-                price,
-                imgSrc
-              );
-              productBasket.counterUp();
-              productItem.push(productBasket);
-            } else {
-              productItem[id].counterUp();
-            }
+      const itemId = e.target.dataset.id;
+      cartContent.innerHTML = "";
+      Products.items.forEach((product, index) => {
+        const title = product.fields.title;
+        const price = product.fields.price;
+        const imgSrc = product.fields.image.fields.file.url;
+        if (itemId - 1 === index) {
+          const id = findId(productItem, itemId);
+          if (id === -1) {
+            const productBasket = new ProductsBasket(
+              itemId,
+              title,
+              price,
+              imgSrc
+            );
+            productBasket.counterUp();
+            productItem.push(productBasket);
+          } else {
+            productItem[id].counterUp();
           }
-        });
-        productItem.forEach((product) => {
-          creatCartItem(product);
-        });
-      } else {
-        const itemId = e.target.parentElement.id;
-        cartContent.innerHTML = "";
-        Products.items.forEach((product, index) => {
-          const title = product.fields.title;
-          const price = product.fields.price;
-          const imgSrc = product.fields.image.fields.file.url;
-          if (itemId - 1 === index) {
-            const id = findId(productItem, itemId);
-            if (id === -1) {
-              const productBasket = new ProductsBasket(
-                itemId,
-                title,
-                price,
-                imgSrc
-              );
-              productBasket.counterUp();
-              productItem.push(productBasket);
-            } else {
-              productItem[id].counterUp();
-            }
-          }
-        });
-        productItem.forEach((product) => {
-          creatCartItem(product);
-        });
-      }
+        }
+      });
+      productItem.forEach((product) => {
+        creatCartItem(product);
+      });
+
       itemsCounter++;
       cartItems.textContent = itemsCounter;
       totalPrice(productItem);
     })
     .appendTo(divProductList);
-
-  builder("i").className("fas fa-shopping-cart").appendTo(addButton);
-
-  addButton.text("Add To Card");
-
-  builder("i").className("fas fa-shopping-cart").appendTo(addButton);
-
   builder("h3").text(`${product.fields.title}`).appendTo(article);
 });
+
+
 
 /* Functions */
 
