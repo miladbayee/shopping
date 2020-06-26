@@ -57,18 +57,14 @@ Products.items.forEach((product) => {
         }
       });
       selectProduct.forEach((product) => {
-        creatCartItem(product);
+      creatCartItem(product);
       });
-
-      itemsCounter++;
-      cartItems.textContent = itemsCounter;
+      cartItems.textContent = countItems(selectProduct);
       totalPrice(selectProduct);
     })
     .appendTo(divProductList);
   builder("h3").text(`${product.fields.title}`).appendTo(article);
 });
-
-
 
 /* Functions */
 
@@ -113,10 +109,22 @@ function creatCartItem(product) {
   const h5 = document.createElement("h5");
   h5.textContent = `${product.price}`;
   divTitle.appendChild(h5);
-  const span = document.createElement("span");
 
+  const span = document.createElement("span");
   span.textContent = "remove";
   span.className = "remove-item";
+  span.dataset.id = `${product.id}`;
+  span.onclick = (e) => {
+    const getId = e.target.dataset.id;
+    selectProduct.forEach((item, index) => {
+      if (item.id === getId) {
+        e.target.parentElement.parentElement.remove();
+        selectProduct.splice(index, 1);
+        totalPrice(selectProduct);
+       cartItems.textContent =countItems(selectProduct)
+      }
+    });
+  };
   divTitle.appendChild(span);
   cartItemElement.appendChild(divTitle);
 
@@ -130,10 +138,9 @@ function creatCartItem(product) {
     selectProduct.forEach((item) => {
       if (item.id === getId) {
         item.counter++;
-        itemsCounter++;
-        cartItems.textContent = itemsCounter;
         pElementAmount.textContent = `${product.counter}`;
       }
+      cartItems.textContent = countItems(selectProduct);
     });
     totalPrice(selectProduct);
   };
@@ -148,24 +155,18 @@ function creatCartItem(product) {
   iElementDown.className = "fas fa-chevron-down";
   iElementDown.onclick = (e) => {
     const getId = e.target.parentElement.dataset.id;
-    selectProduct.forEach((item) => {
+    selectProduct.forEach((item, index) => {
       if (item.id === getId) {
         item.counter--;
         if (item.counter > 0) {
-          itemsCounter--;
-          cartItems.textContent = itemsCounter;
           pElementAmount.textContent = `${product.counter}`;
         } else {
-          itemsCounter--;
-          e.target.parentElement.parentElement.innerHTML = "";
-          if (itemsCounter > 0) {
-            cartItems.textContent = itemsCounter;
-          } else {
-            cartItems.textContent = "";
-          }
+          e.target.parentElement.parentElement.remove();
+          selectProduct.splice(index, 1);
         }
       }
     });
+    cartItems.textContent = countItems(selectProduct);
     totalPrice(selectProduct);
   };
 
@@ -189,6 +190,16 @@ function totalPrice(products) {
   }
 }
 
+//Count the number select products
+function countItems(array) {
+  let counter = null;
+  array.forEach((item) => {
+    counter += item.counter;
+  });
+  return counter;
+}
+
+
 /*Events Listener */
 
 //add event to backet button
@@ -206,8 +217,9 @@ closeCartBtn.addEventListener("click", () => {
 // clear all items for cart overlay
 clearCartBtn.addEventListener("click", () => {
   const totalPrice = document.querySelector("#total-price");
-  cartItems.textContent = "";
-  itemsCounter = null;
+  selectProduct = [];
+  cartItems.textContent = cartItems.textContent = countItems(selectProduct);
   cartContent.innerHTML = "";
   totalPrice.textContent = "";
 });
+
