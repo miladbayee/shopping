@@ -218,7 +218,7 @@ closeCartBtn.addEventListener("click", () => {
 clearCartBtn.addEventListener("click", () => {
   const totalPrice = document.querySelector("#total-price");
   selectProduct = [];
-  cartItems.textContent = cartItems.textContent = countItems(selectProduct);
+  cartItems.textContent = countItems(selectProduct);
   cartContent.innerHTML = "";
   totalPrice.textContent = "";
 });
