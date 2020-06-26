@@ -1,11 +1,11 @@
 /* Variabeles */
 let itemsCounter = null;
 const buyBascketBtn = document.querySelector("#buy-bascket-btn");
-const closeCart = document.querySelector(".close-cart");
+const closeCartBtn = document.querySelector(".close-cart");
 const cartItems = document.querySelector(".cart-items");
-const clearCart = document.querySelector("#clear-cart");
+const clearCartBtn = document.querySelector("#clear-cart");
 const cartContent = document.querySelector("#cart-content");
-let productItem = [];
+let selectProduct = [];
 
 //add products data from json file to DOM
 Products.items.forEach((product) => {
@@ -41,7 +41,7 @@ Products.items.forEach((product) => {
         const price = product.fields.price;
         const imgSrc = product.fields.image.fields.file.url;
         if (itemId - 1 === index) {
-          const id = findId(productItem, itemId);
+          const id = findId(selectProduct, itemId);
           if (id === -1) {
             const productBasket = new ProductsBasket(
               itemId,
@@ -50,19 +50,19 @@ Products.items.forEach((product) => {
               imgSrc
             );
             productBasket.counterUp();
-            productItem.push(productBasket);
+            selectProduct.push(productBasket);
           } else {
-            productItem[id].counterUp();
+            selectProduct[id].counterUp();
           }
         }
       });
-      productItem.forEach((product) => {
+      selectProduct.forEach((product) => {
         creatCartItem(product);
       });
 
       itemsCounter++;
       cartItems.textContent = itemsCounter;
-      totalPrice(productItem);
+      totalPrice(selectProduct);
     })
     .appendTo(divProductList);
   builder("h3").text(`${product.fields.title}`).appendTo(article);
@@ -90,7 +90,7 @@ function cartItemBuilder(imgSrc, title, price, count) {
   `;
 }
 
-//finde products index
+//find products id
 const findId = (array, id) => {
   return array.findIndex((item) => item.id === id);
 };
@@ -127,7 +127,7 @@ function creatCartItem(product) {
   iElementUp.className = "fas fa-chevron-up";
   iElementUp.onclick = (e) => {
     const getId = e.target.parentElement.dataset.id;
-    productItem.forEach((item) => {
+    selectProduct.forEach((item) => {
       if (item.id === getId) {
         item.counter++;
         itemsCounter++;
@@ -135,7 +135,7 @@ function creatCartItem(product) {
         pElementAmount.textContent = `${product.counter}`;
       }
     });
-    totalPrice(productItem);
+    totalPrice(selectProduct);
   };
   divCounter.appendChild(iElementUp);
 
@@ -148,7 +148,7 @@ function creatCartItem(product) {
   iElementDown.className = "fas fa-chevron-down";
   iElementDown.onclick = (e) => {
     const getId = e.target.parentElement.dataset.id;
-    productItem.forEach((item) => {
+    selectProduct.forEach((item) => {
       if (item.id === getId) {
         item.counter--;
         if (item.counter > 0) {
@@ -166,7 +166,7 @@ function creatCartItem(product) {
         }
       }
     });
-    totalPrice(productItem);
+    totalPrice(selectProduct);
   };
 
   divCounter.appendChild(iElementDown);
@@ -178,12 +178,12 @@ function creatCartItem(product) {
 //calculator select products price in cart items
 function totalPrice(products) {
   const totalPrice = document.querySelector("#total-price");
-  let calcPrice = null;
+  let calculatroPrice = null;
   products.forEach((item) => {
-    return (calcPrice += item.price * item.counter);
+    return (calculatroPrice += item.price * item.counter);
   });
-  if (calcPrice > 0) {
-    totalPrice.textContent = calcPrice;
+  if (calculatroPrice > 0) {
+    totalPrice.textContent = calculatroPrice;
   } else {
     totalPrice.textContent = "";
   }
@@ -198,13 +198,13 @@ buyBascketBtn.addEventListener("click", () => {
 });
 
 //add event to close button in cart overlay
-closeCart.addEventListener("click", () => {
+closeCartBtn.addEventListener("click", () => {
   document.querySelector(".cart-overlay").classList.remove("transparentBcg");
   document.querySelector(".cart").classList.remove("showCart");
 });
 
 // clear all items for cart overlay
-clearCart.addEventListener("click", () => {
+clearCartBtn.addEventListener("click", () => {
   const totalPrice = document.querySelector("#total-price");
   cartItems.textContent = "";
   itemsCounter = null;
