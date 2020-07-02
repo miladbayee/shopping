@@ -4,7 +4,7 @@ class ProductsBasket {
     this.title = title;
     this.price = price;
     this.imgSrc = imgSrc;
-    this.counter = null;
+    this.counter = 1;
   }
 
   counterUp() {
