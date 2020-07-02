@@ -1,5 +1,4 @@
 /* Variabeles */
-let itemsCounter = null;
 const buyBascketBtn = document.querySelector("#buy-bascket-btn");
 const closeCartBtn = document.querySelector(".close-cart");
 const cartItems = document.querySelector(".cart-items");
@@ -49,16 +48,13 @@ Products.items.forEach((product) => {
               price,
               imgSrc
             );
-            productBasket.counterUp();
             selectProduct.push(productBasket);
           } else {
             selectProduct[id].counterUp();
           }
         }
       });
-      selectProduct.forEach((product) => {
-      creatCartItem(product);
-      });
+      selectProduct.forEach(creatCartItem);
       cartItems.textContent = countItems(selectProduct);
       totalPrice(selectProduct);
     })
@@ -87,9 +83,7 @@ function cartItemBuilder(imgSrc, title, price, count) {
 }
 
 //find products id
-const findId = (array, id) => {
-  return array.findIndex((item) => item.id === id);
-};
+const findId = (array, id) => array.findIndex(item => item.id === id);
 
 //function add product from list to cart items
 function creatCartItem(product) {
@@ -115,13 +109,13 @@ function creatCartItem(product) {
   span.className = "remove-item";
   span.dataset.id = `${product.id}`;
   span.onclick = (e) => {
-    const getId = e.target.dataset.id;
+    const productId = e.target.dataset.id;
     selectProduct.forEach((item, index) => {
-      if (item.id === getId) {
+      if (item.id === productId) {
         e.target.parentElement.parentElement.remove();
         selectProduct.splice(index, 1);
         totalPrice(selectProduct);
-       cartItems.textContent =countItems(selectProduct)
+        cartItems.textContent = countItems(selectProduct)
       }
     });
   };
@@ -134,9 +128,9 @@ function creatCartItem(product) {
   const iElementUp = document.createElement("i");
   iElementUp.className = "fas fa-chevron-up";
   iElementUp.onclick = (e) => {
-    const getId = e.target.parentElement.dataset.id;
+    const productId = e.target.parentElement.dataset.id;
     selectProduct.forEach((item) => {
-      if (item.id === getId) {
+      if (item.id === productId) {
         item.counter++;
         pElementAmount.textContent = `${product.counter}`;
       }
@@ -154,9 +148,9 @@ function creatCartItem(product) {
   const iElementDown = document.createElement("i");
   iElementDown.className = "fas fa-chevron-down";
   iElementDown.onclick = (e) => {
-    const getId = e.target.parentElement.dataset.id;
+    const productId = e.target.parentElement.dataset.id;
     selectProduct.forEach((item, index) => {
-      if (item.id === getId) {
+      if (item.id === productId) {
         item.counter--;
         if (item.counter > 0) {
           pElementAmount.textContent = `${product.counter}`;
@@ -179,24 +173,16 @@ function creatCartItem(product) {
 //calculator select products price in cart items
 function totalPrice(products) {
   const totalPrice = document.querySelector("#total-price");
-  let calculatroPrice = null;
-  products.forEach((item) => {
-    return (calculatroPrice += item.price * item.counter);
-  });
-  if (calculatroPrice > 0) {
-    totalPrice.textContent = calculatroPrice;
-  } else {
-    totalPrice.textContent = "";
-  }
+
+  totalPrice.textContent = products.reduce(
+    (acc, cur) => acc + (cur.price * cur.counter),
+    0
+  ) || '';
 }
 
 //Count the number select products
 function countItems(array) {
-  let counter = null;
-  array.forEach((item) => {
-    counter += item.counter;
-  });
-  return counter;
+  return array.reduce((acc, cur) => acc + cur.counter, 0);
 }
 
 
